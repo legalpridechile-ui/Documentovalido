@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Validación de Documento</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <style>
+    :root{
+      --bg:#0b1020;
+      --line: rgba(255,255,255,.14);
+      --text: rgba(255,255,255,.94);
+      --muted: rgba(255,255,255,.72);
+      --card: rgba(255,255,255,.06);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:
+        radial-gradient(900px 500px at 15% 10%, rgba(34,197,94,.12), transparent 55%),
+        radial-gradient(900px 500px at 90% 10%, rgba(59,130,246,.14), transparent 55%),
+        var(--bg);
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:24px;
+    }
+    .card{
+      width:min(760px, 96vw);
+      border:1px solid var(--line);
+      border-radius:24px;
+      background: linear-gradient(180deg, var(--card), rgba(255,255,255,.02));
+      box-shadow: 0 25px 70px rgba(0,0,0,.45);
+      padding:28px;
+    }
+    .seal{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      padding:14px 16px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background: rgba(0,0,0,.22);
+      margin-bottom:18px;
+    }
+    .check{
+      width:54px;height:54px;
+      border-radius:18px;
+      border:1px solid rgba(34,197,94,.45);
+      background: rgba(34,197,94,.12);
+      display:grid;place-items:center;
+      font-size:26px;
+      font-weight:900;
+    }
+    h1{
+      margin:0;
+      font-size: clamp(1.6rem, 2.6vw, 2.3rem);
+      letter-spacing:-.2px;
+    }
+    .sub{
+      margin:6px 0 0;
+      color:var(--muted);
+      line-height:1.45;
+    }
+    .grid{
+      margin-top:18px;
+      border-top:1px solid var(--line);
+      padding-top:18px;
+      display:grid;
+      gap:10px;
+    }
+    .row{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      padding:10px 0;
+      border-bottom:1px dashed rgba(255,255,255,.12);
+    }
+    .row:last-child{border-bottom:none;}
+    .k{color:var(--muted);}
+    .v{font-weight:800; text-align:right;}
+    .mono{font-family:var(--mono);}
+    .footer{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:.92rem;
+      text-align:center;
+    }
+  </style>
+</head>
+<body>
+  <section class="card" role="status" aria-live="polite">
+    <div class="seal">
+      <div class="check">✓</div>
+      <div>
+        <h1>DOCUMENTO validado</h1>
+        <p class="sub">Copia fiel del original · Firma certificada</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="row">
+        <div class="k">Estado</div>
+        <div class="v">Válido y original</div>
+      </div>
+      <div class="row">
+        <div class="k">Código CVS</div>
+        <div class="v mono">94976899</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      Verificación realizada mediante código de validación.
+    </div>
+  </section>
+</body>
+</html>
