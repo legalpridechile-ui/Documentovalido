@@ -23,12 +23,10 @@ body{
 margin:0;
 font-family:var(--sans);
 color:var(--text);
-
 background:
 radial-gradient(900px 500px at 15% 10%, rgba(34,197,94,.12), transparent 55%),
 radial-gradient(900px 500px at 90% 10%, rgba(59,130,246,.14), transparent 55%),
 var(--bg);
-
 min-height:100vh;
 display:grid;
 place-items:center;
@@ -113,7 +111,7 @@ font-family:var(--mono);
 }
 
 .download{
-display:block;
+display:none; /* Se muestra solo si el ID es válido */
 margin-top:22px;
 padding:16px;
 text-align:center;
@@ -138,49 +136,66 @@ font-size:.92rem;
 text-align:center;
 }
 </style>
-
 </head>
-
 <body>
 
 <section class="card" role="status" aria-live="polite">
+    <div class="seal">
+        <div class="check">✓</div>
+        <div>
+            <h1>DOCUMENTO validado</h1>
+            <p class="sub">Copia fiel del original · Firma certificada</p>
+        </div>
+    </div>
 
-<div class="seal">
-<div class="check">✓</div>
+    <div class="grid">
+        <div class="row">
+            <div class="k">Estado</div>
+            <div class="v" id="status-val">Válido y original</div>
+        </div>
+        <div class="row">
+            <div class="k">Código de Validación</div>
+            <div class="v mono" id="cvs-display">Esperando código...</div>
+        </div>
+    </div>
 
-<div>
-<h1>DOCUMENTO validado</h1>
-<p class="sub">Copia fiel del original · Firma certificada</p>
-</div>
-</div>
+    <a href="#" id="btn-download" class="download">
+        Descargar documento validado
+    </a>
 
-<div class="grid">
-
-<div class="row">
-<div class="k">Estado</div>
-<div class="v">Válido y original</div>
-</div>
-
-<div class="row">
-<div class="k">Código CVS</div>
-<div class="v mono">94976899</div>
-</div>
-
-</div>
-
-<a
-href="https://raw.githubusercontent.com/legalpridechile-ui/Documentovalido/main/assets/QRVAL94976899.pdf"
-download="QRVAL94976899.pdf"
-class="download"
->
-Descargar documento validado
-</a>
-
-<div class="footer">
-Verificación realizada mediante código de validación.
-</div>
-
+    <div class="footer">
+        Verificación realizada mediante sistema de control QRVL.
+    </div>
 </section>
+
+<script>
+    // 1. Obtiene el número del QR (ejemplo: ?n=01)
+    const params = new URLSearchParams(window.location.search);
+    const num = params.get('n');
+
+    const cvsDisplay = document.getElementById('cvs-display');
+    const btnDownload = document.getElementById('btn-download');
+    const statusVal = document.getElementById('status-val');
+
+    if (num) {
+        // Formateamos el texto para que siempre diga QRVL + el numero
+        const codigoCompleto = `QRVL${num}`;
+        cvsDisplay.textContent = codigoCompleto;
+
+        // Construimos la ruta al PDF en tu carpeta assets
+        const fileName = `${codigoCompleto}.pdf`;
+        const fileUrl = `https://raw.githubusercontent.com/legalpridechile-ui/Documentovalido/main/assets/${fileName}`;
+
+        // Configuramos el botón
+        btnDownload.href = fileUrl;
+        btnDownload.download = fileName;
+        btnDownload.style.display = 'block';
+    } else {
+        cvsDisplay.textContent = "Código no detectado";
+        statusVal.textContent = "Error de lectura";
+        statusVal.style.color = "#ff4444";
+    }
+</script>
 
 </body>
 </html>
