@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sistema QRVL - Validación</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+:root{
+--bg:#0b1020;
+--line: rgba(255,255,255,.14);
+--text: rgba(255,255,255,.94);
+--muted: rgba(255,255,255,.72);
+--card: rgba(255,255,255,.06);
+--mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+--sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+--accent: #22c55e;
+}
+
+*{box-sizing:border-box;}
+body{
+margin:0; font-family:var(--sans); color:var(--text);
+background: radial-gradient(900px 500px at 15% 10%, rgba(34,197,94,.12), transparent 55%), var(--bg);
+min-height:100vh; display:grid; place-items:center; padding:24px;
+}
+
+.card{
+width:min(760px, 96vw); border:1px solid var(--line); border-radius:24px;
+background: linear-gradient(180deg, var(--card), rgba(255,255,255,.02));
+box-shadow: 0 25px 70px rgba(0,0,0,.45); padding:28px;
+}
+
+/* Estilos Validación */
+.seal{ display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+.check{ width:54px; height:54px; border-radius:18px; border:1px solid rgba(34,197,94,.45); background: rgba(34,197,94,.12); display:grid; place-items:center; font-size:26px; font-weight:900; color:var(--accent); }
+.grid{ margin-top:18px; border-top:1px solid var(--line); padding-top:18px; display:grid; gap:10px; }
+.row{ display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px dashed rgba(255,255,255,.12); }
+.v{ font-weight:800; }
+.download{ display:block; margin-top:22px; padding:16px; text-align:center; border-radius:14px; background:linear-gradient(90deg,#16a34a,#22c55e); font-weight:700; text-decoration:none; color:white; }
+
+/* Estilos Generador (Admin) */
+#admin-panel{ display:none; text-align:center; }
+input{ background:rgba(255,255,255,0.05); border:1px solid var(--line); color:white; padding:12px; border-radius:8px; width:100px; font-size:18px; text-align:center; margin:10px 0; }
+#qrcode{ background:white; padding:15px; border-radius:12px; display:inline-block; margin-top:20px; }
+.btn-gen{ background: var(--accent); color:black; border:none; padding:12px 24px; border-radius:8px; font-weight:bold; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<section id="view-valid" class="card" style="display:none;">
+    <div class="seal">
+        <div class="check">✓</div>
+        <div>
+            <h1>DOCUMENTO validado</h1>
+            <p style="color:var(--muted); margin:4px 0;">Copia fiel · Sistema QRVL</p>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="row"><span>Estado</span><span class="v" style="color:var(--accent)">Válido y original</span></div>
+        <div class="row"><span>Código</span><span class="v mono" id="doc-code">---</span></div>
+    </div>
+    <a href="#" id="btn-download" class="download">Descargar PDF</a>
+</section>
+
+<section id="admin-panel" class="card">
+    <h2>Generador de QR Interno</h2>
+    <p style="color:var(--muted)">Ingresa el número correlativo (ej: 01, 02...)</p>
+    <input type="text" id="qr-input" placeholder="01" maxlength="3">
+    <br>
+    <button class="btn-gen" onclick="generateNow()">Generar Código QR</button>
+    <br>
+    <div id="qrcode"></div>
+    <p id="qr-link" style="font-size:12px; color:var(--muted); margin-top:15px; word-break:break-all;"></p>
+</section>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const n = params.get('n');
+
+if (n) {
+    // Modo Validación
+    document.getElementById('admin-panel').style.display = 'none';
+    document.getElementById('view-valid').style.display = 'block';
+    document.getElementById('doc-code').textContent = 'QRVL' + n;
+    
+    const fileName = `QRVL${n}.pdf`;
+    const btn = document.getElementById('btn-download');
+    btn.href = `https://raw.githubusercontent.com/legalpridechile-ui/Documentovalido/main/assets/${fileName}`;
+    btn.download = fileName;
+}
+
+// Lógica del Generador
+const qrcodeContainer = document.getElementById("qrcode");
+let qrcode = new QRCode(qrcodeContainer, { width: 200, height: 200 });
+
+function generateNow() {
+    const val = document.getElementById('qr-input').value.trim();
+    if(!val) return alert("Pon un número");
+    
+    // Construye la URL de tu sitio
+    const baseUrl = window.location.href.split('?')[0];
+    const fullUrl = `${baseUrl}?n=${val}`;
+    
+    qrcode.clear();
+    qrcode.makeCode(fullUrl);
+    document.getElementById('qr-link').textContent = fullUrl;
+}
+</script>
+</body>
+</html>
